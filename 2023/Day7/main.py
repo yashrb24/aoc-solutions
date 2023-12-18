@@ -1,9 +1,12 @@
 from collections import Counter
 from functools import cmp_to_key
 
+cards1 = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+cards2 = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]
 
-cards = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2", "1"]
-card_powers = {c: i for i, c in enumerate(reversed(cards))}
+card_powers1 = {c: i for i, c in enumerate(reversed(cards1))}
+card_powers2 = {c: i for i, c in enumerate(reversed(cards2))}
+
 hand_powers = {
     (5,): 6,  # five of a kind
     (4, 1): 5,  # four of a kind
@@ -15,7 +18,7 @@ hand_powers = {
 }
 
 
-def comparator(hand1, hand2):
+def comparator1(hand1, hand2):
     hand1_type = tuple(sorted(list(Counter(hand1).values()), reverse=True))
     pow1 = hand_powers[hand1_type]
 
@@ -28,9 +31,9 @@ def comparator(hand1, hand2):
         return -1
     else:
         for c1, c2 in zip(hand1, hand2):
-            if card_powers[c1] > card_powers[c2]:
+            if card_powers1[c1] > card_powers1[c2]:
                 return 1
-            elif card_powers[c1] < card_powers[c2]:
+            elif card_powers1[c1] < card_powers1[c2]:
                 return -1
             else:
                 continue
@@ -43,8 +46,8 @@ def part1(data):
         hand, bet = line.split()
         bids[hand] = int(bet)
         hands.append(hand)
-    
-    sorted_hands = sorted(hands, key=cmp_to_key(comparator))
+
+    sorted_hands = sorted(hands, key=cmp_to_key(comparator1))
 
     total = 0
     for i, hand in enumerate(sorted_hands):
