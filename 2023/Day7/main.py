@@ -8,7 +8,7 @@ card_powers1 = {c: i for i, c in enumerate(reversed(cards1))}
 card_powers2 = {c: i for i, c in enumerate(reversed(cards2))}
 
 hand_powers = {
-    (5,): 6,  # five of a kind
+    (5): 6,  # five of a kind
     (4, 1): 5,  # four of a kind
     (3, 2): 4,  # full house
     (3, 1, 1): 3,  # three of a kind
