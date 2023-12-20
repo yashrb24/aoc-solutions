@@ -8,8 +8,7 @@ def part1(data):
         while True:
             new_array = [arrays[-1][i+1] - arrays[-1][i] for i in range(len(arrays[-1]) - 1)]
             arrays.append(new_array)
-            if sum(new_array) == 0:
-                arrays[-1].append(0)
+            if all([x == 0 for x in new_array]):
                 break
 
         for i in range(len(arrays) - 1, 0, -1):
