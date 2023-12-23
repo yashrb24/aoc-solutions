@@ -4,7 +4,7 @@ from functools import cache
 @cache
 def dp(string_index, group_index, string, group):
     # base case
-    if string_index == len(string):
+    if string_index >= len(string):
         return group_index == len(group)
     
     if group_index == len(group):
@@ -58,7 +58,18 @@ def part1(data):
 
 
 def part2(data):
-    pass
+    total = 0
+    for line in data:
+        cfg, runs = line.split()
+        
+        runs = list(map(int, runs.split(",")))
+        runs = tuple(runs * 5)
+
+        cfg = "?".join([cfg for _ in range(5)])
+
+        total += dp(0, 0, cfg, runs)
+
+    print(total)
 
 
 if __name__ == "__main__":
