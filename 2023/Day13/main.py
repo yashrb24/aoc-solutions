@@ -45,126 +45,37 @@ def part1(data):
     print(total)
 
 
-def part2(data):
-    grid = []
-    total = 0
+def reflection(p):
+    n = len(p)
 
-    for line in data:
-        if line == "":
-            orig_h = find_horizontal_reflection(grid)
-            orig_v = find_vertical_reflection(grid)
+    for i in range(1, n):
+        total = 0
 
-            n, m = len(grid), len(grid[0])
-            for x in range(n):
-                found = False
+        for l, m in zip(p[i - 1 :: -1], p[i:]):
+            for c, d in zip(l, m):
+                total += (c != d)
 
-                for y in range(m):
-                    curr = grid[x][y]
+        if total == 1:
+            return i
 
-                    if curr == "#":
-                        tmp = list(grid[x])
-                        tmp[y] = "."
-                        grid[x] = "".join(tmp)
-
-                        new_h = find_horizontal_reflection(grid)
-                        new_v = find_vertical_reflection(grid)
-
-                        tmp[y] = "#"
-                        grid[x] = "".join(tmp)
-
-                        if not (new_h == new_v == 0) and not (
-                            new_h == orig_h and new_v == orig_v
-                        ):
-                            found = True
-                            total += new_h * 100 + new_v
-                            print(f"Found at {x = } and {y = }")
-                            break
-
-                    else:
-                        tmp = list(grid[x])
-                        tmp[y] = "#"
-                        grid[x] = "".join(tmp)
-
-                        new_h = find_horizontal_reflection(grid)
-                        new_v = find_vertical_reflection(grid)
-
-                        tmp[y] = "."
-                        grid[x] = "".join(tmp)
-
-                        if not (new_h == new_v == 0) and not (
-                            new_h == orig_h and new_v == orig_v
-                        ):
-                            found = True
-                            total += new_h * 100 + new_v
-                            print(f"Found at {x = } and {y = }")
-                            break
+    return 0
 
 
-                if found:
-                    break
+def part2(grids):
+    answer = 0
+    for grid in grids:
+        grid_t = [*zip(*grid)]
+        answer += reflection(grid) * 100 + reflection(grid_t)
 
-            grid = []
-
-        else:
-            grid.append(line)
-
-
-    orig_h = find_horizontal_reflection(grid)
-    orig_v = find_vertical_reflection(grid)
-
-    n, m = len(grid), len(grid[0])
-    for x in range(n):
-        found = False
-
-        for y in range(m):
-            curr = grid[x][y]
-            
-            if curr == "#":
-                tmp = list(grid[x])
-                tmp[y] = "."
-                grid[x] = "".join(tmp)
-
-                new_h = find_horizontal_reflection(grid)
-                new_v = find_vertical_reflection(grid)
-
-                tmp[y] = "#"
-                grid[x] = "".join(tmp)
-
-                if not (new_h == new_v == 0) and not (
-                    new_h == orig_h and new_v == orig_v
-                ):
-                    found = True
-                    total += new_h * 100 + new_v
-                    print(f"Found at {x = } and {y = }")
-                    break
-
-            else:
-                tmp = list(grid[x])
-                tmp[y] = "#"
-                grid[x] = "".join(tmp)
-
-                new_h = find_horizontal_reflection(grid)
-                new_v = find_vertical_reflection(grid)
-
-                tmp[y] = "."
-                grid[x] = "".join(tmp)
-
-                if not (new_h == new_v == 0) and not (
-                    new_h == orig_h and new_v == orig_v
-                ):
-                    found = True
-                    total += new_h * 100 + new_v
-                    print(f"Found at {x = } and {y = }")
-                    break
-
-        if found:
-            break
-
-    print(total)
+    print(answer)
 
 
 if __name__ == "__main__":
     with open("input.txt") as f:
         data = f.read().splitlines()
+
+    with open("input.txt") as f2:
+        data2 = list(map(str.split, f2.read().split("\n\n")))
+
     part1(data)
-    part2(data)
+    part2(data2)
