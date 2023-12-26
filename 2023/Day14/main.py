@@ -1,6 +1,7 @@
 import bisect
 import sys
 
+# TODO: REWRITE PART1 USING TILT WRITTEN FOR PART2
 
 def print_transformed_list(list_of_lists):
     for sublist in list_of_lists:
