@@ -1,5 +1,14 @@
 import bisect
-from pprint import pprint as print
+import sys
+
+
+def print_transformed_list(list_of_lists):
+    for sublist in list_of_lists:
+        transformed_sublist = [
+            "0" if char == "." else "1" if char == "O" else "2" for char in sublist
+        ]
+        sys.stdout.write(" ".join(transformed_sublist))
+        print()
 
 
 def part1(data):
@@ -41,13 +50,15 @@ def part1(data):
 
 
 def get_score(grid):
+    new_grid = list(map(list, zip(*grid)))
+    m = len(new_grid[0])
+    # print(m)
     score = 0
-    m = len(grid[0])
 
-    for line in grid:
+    for line in new_grid:
         for i, c in enumerate(line):
             if c == "O":
-                score += m + 1 - i
+                score += m - i
 
     return score
 
@@ -158,10 +169,10 @@ def part2(grid):
         iteration += 1
 
         grid = cycle(grid)
-        print(f"After {iteration = }")
-        print(grid)
-        print("=============================================")
-        
+        # print(f"After {iteration = }")
+        # print_transformed_list(grid)
+        # print("=============================================")
+
         hashed_grid = hash(tuple(map(tuple, grid)))
         if hashed_grid in grid_to_cycle:
             offset = grid_to_cycle[hashed_grid]
@@ -170,19 +181,21 @@ def part2(grid):
             grid_to_cycle[hashed_grid] = iteration
             cycle_to_grid[iteration] = grid
 
-
     total = 1000000000
     cycle_length = iteration - offset
     cycle_count = (total - offset) // cycle_length
     remainder = total - cycle_count * cycle_length - offset
 
     final_grid = cycle_to_grid[offset + remainder]
-
-    print(f"{offset = } {iteration = }")
+    # print(final_grid)
+    # print(
+    #     f"{offset = } {iteration = } {remainder = } {total = } {offset + remainder = }"
+    # )
     print(get_score(final_grid))
+
 
 if __name__ == "__main__":
     with open("input.txt") as f:
         data = f.read().splitlines()
-    # part1(data)
+    part1(data)
     part2(data)
