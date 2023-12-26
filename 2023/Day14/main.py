@@ -124,7 +124,7 @@ def tilt(grid):
 
 def cycle(grid):
     # tilt north
-    north_grid = list(map(list, zip(*curr)))
+    north_grid = list(map(list, zip(*grid)))
     north_grid_tilted = tilt(north_grid)
     north_grid_tilted_base = list(map(list, zip(*north_grid_tilted)))
 
@@ -136,7 +136,9 @@ def cycle(grid):
     # tilt south
     south_grid = [line[::-1] for line in list(map(list, zip(*east_grid_tilted_base)))]
     south_grid_tilted = tilt(south_grid)
-    south_grid_tilted_base = list(map(list, zip(*[line[::-1] for line in south_grid_tilted])))
+    south_grid_tilted_base = list(
+        map(list, zip(*[line[::-1] for line in south_grid_tilted]))
+    )
 
     # tilt west
     west_grid = [line[::-1] for line in south_grid_tilted_base]
@@ -145,66 +147,39 @@ def cycle(grid):
 
     return west_grid_tilted_base
 
+
 def part2(grid):
-    prev = grid
-    curr = grid
+    iteration = 0
+    offset = 0
+    grid_to_cycle = {}
+    cycle_to_grid = {}
 
-    cycle = 0
-
-    print(curr)
-    print("")
     while True:
-        # tilt north
-        north_grid = list(map(list, zip(*curr)))
-        north_grid_tilted = tilt(north_grid)
-        north_grid_tilted_base = list(map(list, zip(*north_grid_tilted)))
-        # print(north_grid_tilted_base)
-        # print("")
-        # print("")
-        # print("")
+        iteration += 1
 
-        # tilt east
-        east_grid = north_grid_tilted_base
-        east_grid_tilted = tilt(east_grid)
-        east_grid_tilted_base = east_grid_tilted
-        # print(east_grid_tilted_base)
-        # print("")
-        # print("")
-        # print("")
-
-        # tilt south
-        south_grid = [line[::-1] for line in list(map(list, zip(*east_grid_tilted_base)))]
-        south_grid_tilted = tilt(south_grid)
-        # south_grid_tilted_base = [*zip(*[line[::-1] for line in south_grid_tilted])]
-        south_grid_tilted_base = list(map(list, zip(*[line[::-1] for line in south_grid_tilted])))
-        # print(south_grid_tilted_base)
-        # print("")
-        # print("")
-        # print("")
-
-
-        # tilt west
-        west_grid = [line[::-1] for line in south_grid_tilted_base]
-        west_grid_tilted = tilt(west_grid)
-        west_grid_tilted_base = [line[::-1] for line in west_grid_tilted]
-        # print(west_grid_tilted_base)
-        # print("")
-        # print("")
-        # print("")
-
+        grid = cycle(grid)
+        print(f"After {iteration = }")
+        print(grid)
+        print("=============================================")
         
-        curr = west_grid_tilted_base
-
-        # print("========================================================================")
-        if curr == prev:
+        hashed_grid = hash(tuple(map(tuple, grid)))
+        if hashed_grid in grid_to_cycle:
+            offset = grid_to_cycle[hashed_grid]
             break
+        else:
+            grid_to_cycle[hashed_grid] = iteration
+            cycle_to_grid[iteration] = grid
 
-        cycle += 1
-        print(f"{cycle = }")
-        prev = curr
 
-    print(get_score(curr))
+    total = 1000000000
+    cycle_length = iteration - offset
+    cycle_count = (total - offset) // cycle_length
+    remainder = total - cycle_count * cycle_length - offset
 
+    final_grid = cycle_to_grid[offset + remainder]
+
+    print(f"{offset = } {iteration = }")
+    print(get_score(final_grid))
 
 if __name__ == "__main__":
     with open("input.txt") as f:
